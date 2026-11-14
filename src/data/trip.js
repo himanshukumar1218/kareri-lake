@@ -12,13 +12,10 @@ export const trip = {
   // ── Lake gallery photos (public/images/lake/) ─────────────────────────────
   // lake-1.jpg is the full-screen hero cover.
   // The slideshow automatically uses all photos below except lake-1.jpg.
-  // Simply add { file: "lake-X.jpg", caption: "Your caption here" } to add more slides.
   lakePhotos: [
     { file: "lake-1.jpg", caption: "Still water, loud silence, zero Wi-Fi. Peak 10/10." },
     { file: "lake-2.jpg", caption: "The moment you stop complaining and start staring." },
     { file: "lake-3.jpg", caption: "Altitude: achieved. Dignity: somewhere on Day 1." },
-    { file: "lake-4.jpg", caption: "Glacial reflection under the pre-dawn Himalayan sky." },
-    { file: "lake-5.jpg", caption: "Sunset over the ridge — suddenly everyone is a philosopher." },
   ],
 
   // ── People (public/images/people/) ───────────────────────────────────────

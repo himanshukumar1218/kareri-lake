@@ -51,35 +51,68 @@ function useCountdown(dateStr) {
   return timeLeft;
 }
 
+// Global reference to ensure strictly ONE audio can play at any given moment
+let globalActiveAudio = null;
+
+function stopGlobalAudio() {
+  if (globalActiveAudio) {
+    try {
+      globalActiveAudio.pause();
+      globalActiveAudio.currentTime = 0;
+    } catch {}
+    globalActiveAudio = null;
+  }
+}
+
 export function CTA({ trip, reducedMotion }) {
   const [decision, setDecision] = useState(null); // 'in' | 'out' | null
   const timeLeft = useCountdown(trip.tripDate);
-  const currentAudioRef = useRef(null);
 
-  // Audio player helper trying common formats (mp3, wav, m4a, ogg)
+  // Stop audio on unmount
+  useEffect(() => {
+    return () => {
+      stopGlobalAudio();
+    };
+  }, []);
+
+  // Audio player helper guaranteeing only one audio track plays at a time
   const playSound = (type) => {
     try {
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-        currentAudioRef.current.currentTime = 0;
-      }
+      // 1. Immediately stop any active audio
+      stopGlobalAudio();
 
       const configured = type === 'in' ? trip.audioIn : trip.audioOut;
       const baseFile = configured || (type === 'in' ? 'audio1.mp3' : 'audio2.mp3');
       const directPath = baseFile.startsWith('/') ? baseFile : `/audio/${baseFile}`;
 
       const audio = new Audio(directPath);
-      currentAudioRef.current = audio;
+      globalActiveAudio = audio;
+
+      audio.onended = () => {
+        if (globalActiveAudio === audio) {
+          globalActiveAudio = null;
+        }
+      };
 
       audio.play().catch(() => {
-        // Fallback: try alternate extensions if primary fails
+        // Fallback: try alternate extensions sequentially if primary fails, never overlapping
         const baseName = type === 'in' ? 'audio1' : 'audio2';
-        const alternates = ['.wav', '.m4a', '.ogg', '.mp3'];
+        const alternates = ['.mp3', '.wav', '.m4a', '.ogg'];
+        let tried = false;
+
         for (const ext of alternates) {
+          if (directPath.endsWith(ext)) continue;
+          if (tried) break;
+          tried = true;
+
           const altAudio = new Audio(`/audio/${baseName}${ext}`);
-          altAudio.play().then(() => {
-            currentAudioRef.current = altAudio;
-          }).catch(() => {});
+          if (globalActiveAudio === audio) {
+            globalActiveAudio = altAudio;
+            altAudio.onended = () => {
+              if (globalActiveAudio === altAudio) globalActiveAudio = null;
+            };
+            altAudio.play().catch(() => {});
+          }
         }
       });
     } catch {
