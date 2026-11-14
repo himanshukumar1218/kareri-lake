@@ -1,0 +1,1 @@
+Drop Kareri Lake photos here named lake-1.jpg, lake-2.jpg, lake-3.jpg etc. The first photo (lake-1.jpg) is the full-screen hero background.

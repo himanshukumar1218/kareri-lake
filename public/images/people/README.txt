@@ -1,0 +1,1 @@
+Drop one photo per person here, named exactly as their slug in src/data/trip.js (e.g. ananya.jpg, rahul.jpg). Square or portrait crops work best.

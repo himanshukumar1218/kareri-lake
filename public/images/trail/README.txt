@@ -1,0 +1,1 @@
+Optional trail/forest/mountain photos for Day plan sections. Name them trail-1.jpg, trail-2.jpg, trail-3.jpg to match the day index.
