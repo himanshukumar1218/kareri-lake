@@ -34,7 +34,7 @@ export const trip = {
   people: [
     {
       slug: "Agarwal",
-      name: "Chodu Agaewal",
+      name: "Chodu Agarwal",
       role: "Knee Pain Specialist",
       roast: "More the weight, less the wait.",
       quote: "Bhai bas 5 minute baithne de, ghutne negotiate kar rahe hain.",
